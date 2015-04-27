@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import  svm
 
+
 #import sklearn.
 
 
@@ -97,6 +98,7 @@ def data_witeout(data_in, data_out, per_train = 0.8):
     valid_data_in = list()
     valid_data_out = list()
 
+
     for i in range(len(data_in)):
         if rd.uniform(0,1) > 0.8:
             valid_data_in.append(data_in[i,:])
@@ -104,6 +106,10 @@ def data_witeout(data_in, data_out, per_train = 0.8):
         else:
             train_data_in.append(data_in[i,:])
             train_data_out.append(data_out[i])
+    np.savetxt('train_in',train_data_in)
+    np.savetxt('train_out',train_data_out)
+    np.savetxt('valid_in',valid_data_in)
+    np.savetxt('valid_out',valid_data_out)
     return train_data_in, train_data_out, valid_data_in, valid_data_out
 
 
@@ -114,13 +120,15 @@ if __name__ == '__main__':
         file_trance(str('RSS/'+ the_file_list[i]),i)
     data_in, data_out = data_pre()
     print len(data_in), len(data_out)
-    train_data_in, train_data_out, valid_data_in, valid_data_out = data_witeout(data_in,data_out)
+    train_data_in, train_data_out, valid_data_in, valid_data_out = data_witeout(data_in,data_out,0.7)
 
-    #clf = KNeighborsClassifier(n_neighbors=5)
-    clf = svm.SVC()
+    clf = KNeighborsClassifier(n_neighbors=5)
+    #clf = svm.SVC()
     clf.fit(train_data_in,train_data_out)
 
     pre_out = clf.predict(valid_data_in)
+    np.savetxt('preout',pre_out)
+
 
     err_times  = 0
     for i in range(len(pre_out)):
